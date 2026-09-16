@@ -68,17 +68,51 @@ goods = {}
 
 result = add_by_note(goods, 'Яйца 4 2023-07-15')
 
-print(result)
-print(goods)
+#print(result)
+#print(goods)
 
-def find(items, search):
+def find(items, needle):
     result = []
+    needle = needle.lower()
 
     for title in items:
-        if search.lower() in title.lower():
+        if needle in title.lower():
             result.append(title)
 
     return result
-#Оставшуюся часть строки объединить, чтобы получить название продукта: 
-# если название состояло из нескольких слов — функция str.split разобьёт его на части.
-#Вызвать функцию add(), передав в неё получившиеся данные — название, количество и срок хранения.
+
+
+def get_amount(items, needle):
+    total = Decimal('0')
+
+    for title in find(items, needle):
+        for batch in items[title]:
+            total += batch['amount']
+
+    return total
+
+
+def get_expired(items, in_advance_days=0):
+    result = []
+
+    today = datetime.date.today()
+    expiration_limit = today + datetime.timedelta(
+        days=in_advance_days
+    )
+
+    for title in items:
+        total_amount = Decimal('0')
+
+        for batch in items[title]:
+            expiration_date = batch['expiration_date']
+
+            if (
+                expiration_date is not None
+                and expiration_date <= expiration_limit
+            ):
+                total_amount += batch['amount']
+
+        if total_amount > 0:
+            result.append((title, total_amount))
+
+    return result
