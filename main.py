@@ -70,6 +70,15 @@ result = add_by_note(goods, 'Яйца 4 2023-07-15')
 
 print(result)
 print(goods)
+
+def find(items, search):
+    result = []
+
+    for title in items:
+        if search.lower() in title.lower():
+            result.append(title)
+
+    return result
 #Оставшуюся часть строки объединить, чтобы получить название продукта: 
 # если название состояло из нескольких слов — функция str.split разобьёт его на части.
 #Вызвать функцию add(), передав в неё получившиеся данные — название, количество и срок хранения.
